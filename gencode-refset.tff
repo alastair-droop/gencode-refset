@@ -1,0 +1,22 @@
+# When running on HPC, we must specify maximum job time and memory:
+MAX_TIME = "00:30:00"
+MAX_MEM = "1G"
+
+# Specify the GENCODE species. This is either "human" or "mouse":
+GENCODE_SPECIES = "human" # This should be "human" or "mouse"
+
+# Specify the reference type. This can be one of "genome", "lnc", "pc", or "transcripts":
+REFSET_TYPE = "genome"
+
+# Specify the GENCODE genome accession, patch and release number:
+GENCODE_ACCESSION = "GRCh38"
+GENCODE_PATCH = "12"
+GENCODE_RELEASE = "29"
+
+# Specify the GENCODE FTP base URL:
+URL_BASE = "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_{GENCODE_SPECIES}/release_{GENCODE_RELEASE}"
+
+# Define the executables used to process the data:
+WGET_EXEC = "wget"
+GZIP_EXEC = "gzip"
+SAMTOOLS_EXEC = "samtools"

@@ -1,0 +1,83 @@
+# This template downloads and indices a reference set from GENCODE.
+# Alastair Droop, 2018-11-21
+
+# Get the necessary Python functions:
+from os import makedirs
+from os.path import exists, expanduser, expandvars
+
+# Make sure that the organism is correct:
+if '{GENCODE_SPECIES}' not in ['human', 'mouse']: raise Exception('Invalid GENCODE_SPECIES token. Value should be one of ("human", "mouse").')
+
+# Build the reference ID and URLs based upon the reference type specified:
+ref_data = dict()
+for i in ['local', 'remote']: ref_data[i] = dict()
+if '{REFSET_TYPE}'.upper() == 'GENOME':
+    ref_data['label'] = 'G'
+    ref_data['remote']['fasta'] = '{GENCODE_ACCESSION}.p{GENCODE_PATCH}.genome.fa.gz'
+    ref_data['remote']['gtf'] = 'gencode.v{GENCODE_RELEASE}.annotation.gtf.gz'
+elif '{REFSET_TYPE}'.upper() == 'TRANSCRIPTS':
+    ref_data['label'] = 'T'
+    ref_data['remote']['fasta'] = 'gencode.v{GENCODE_RELEASE}.transcripts.fa.gz'
+    ref_data['remote']['gtf'] = 'gencode.v{GENCODE_RELEASE}.annotation.gtf.gz'
+elif '{REFSET_TYPE}'.upper() == 'PC':
+    ref_data['label'] = 'P'
+    ref_data['remote']['fasta'] = 'gencode.v{GENCODE_RELEASE}.pc_transcripts.fa.gz'
+    ref_data['remote']['gtf'] = 'gencode.v{GENCODE_RELEASE}.annotation.gtf.gz'
+elif '{REFSET_TYPE}'.upper() == 'LNC':
+    ref_data['label'] = 'L'
+    ref_data['remote']['fasta'] = 'gencode.v{GENCODE_RELEASE}.lncRNA_transcripts.fa.gz'
+    ref_data['remote']['gtf'] = 'gencode.v{GENCODE_RELEASE}.long_noncoding_RNAs.gtf.gz'
+else: raise Exception('Invalid REFSET_TYPE token. Value should be one of ("genome", "transcripts", "pc", "lnc").')
+
+# Define the reference ID:
+refID = '{GENCODE_ACCESSION}p{GENCODE_PATCH}_{GENCODE_RELEASE}%s' % ref_data['label']
+
+# Define the reference set directory structure:
+base_dir = expandvars(expanduser('{REFSET_BASE}/%s' % refID))
+log_dir = '%s/logs' % base_dir
+
+# Define the full path to the reference files:
+for f in ['fasta', 'gtf']: ref_data['local'][f] = '%s/%s.%s' % (base_dir, refID, f)
+
+# Specify the section:
+section('GENCODE-REFSET-%s' % refID, description='Download and index the Gencode reference %s' % refID)
+limits(h_rt='{MAX_TIME}', h_vmem='{MAX_MEM}')
+options('V', 'cwd', 'notify')
+outputs(log_dir)
+
+# Attempt to create the reference set directory structure:
+try:
+    makedirs(log_dir)
+    message('created reference log directory "%s"' % log_dir)
+except FileExistsError: message('reference log directory "%s" already exists' % log_dir)
+except: raise Exception('Failed to create reference log directory %s' % log_dir)
+
+# Check that the directories are all OK:
+for p in [base_dir, log_dir]:
+    require(p, 'PATH_READABLE')
+    require(p, 'PATH_WRITABLE')
+
+# Check that all of the executables are OK:
+for e in ['{WGET_EXEC}', '{SAMTOOLS_EXEC}', '{GZIP_EXEC}']: require(e, 'PATH_EXECUTABLE')
+
+# Define the data we need to get:
+for f in ['fasta', 'gtf']:
+    download_url = '{URL_BASE}/%s' % ref_data['remote'][f]
+    if not exists(ref_data['local'][f]):
+        # Download the input file from GENCODE:
+        message('input %s file %s does not exist; downloading from "%s"' % (f, ref_data['local'][f], download_url))
+        command('{WGET_EXEC} -q -O%s.gz %s' % (ref_data['local'][f], download_url), name='download_%s' % (f))
+        # Decompress the gzipped file:
+        command('{GZIP_EXEC} -d %s.gz' % (ref_data['local'][f]), name='decompress_%s' % (f))
+    else: message('input %s file %s already exists' % (f, ref_data['local'][f]))
+
+# Save the URLs used to log file:
+url_file = '%s/URLs.txt' % (log_dir)
+command('echo -e "FASTA\t{URL_BASE}/%s" > %s' % (ref_data['remote']['fasta'], url_file), name='log_fasta_url')
+command('echo -e "GTF\t{URL_BASE}/%s" >> %s' % (ref_data['remote']['gtf'], url_file), name='log_gtf_url')
+
+# If the FASTA file has not already been indexed, then index it:
+if not exists('%s.fai' % ref_data['local']['fasta']):
+    message('input FASTA index %s.fai does not exist; re-indexing' % (ref_data['local']['fasta']))
+    command('{SAMTOOLS_EXEC} faidx %s' % (ref_data['local']['fasta']), name='index_fasta')
+else: message('input FASTA index %s.fai already exists' % (ref_data['local']['fasta']))
