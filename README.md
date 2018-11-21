@@ -12,12 +12,12 @@ These scripts are run through the [qsubsec](https://github.com/alastair-droop/qs
 
 Currently, four different types of reference set types are specified:
 
-Label | Type
-:----:|:----
-**G** | The complete genome organism sequence (including reference chromosomes, scaffolds, assembly patches and haplotypes)
-**T** | The nucleotide sequences for all transcripts on the reference chromosomes
-**P** | The nucleotide sequences for all protein-coding transcripts on the reference chromosomes (biotypes `protein_coding`, `nonsense_mediated_decay`, `non_stop_decay`, `IG_*_gene`, `TR_*_gene`, `polymorphic_pseudogene`)
-**L** | The nucleotide sequences for all long non-coding transcripts on the reference chromosomes
+Type | Label | Description
+:----|:----:|:----
+`genome` | **G** | The complete genome organism sequence (including reference chromosomes, scaffolds, assembly patches and haplotypes)
+`transcript` | **T** | The nucleotide sequences for all transcripts on the reference chromosomes
+`pc` | **P** | The nucleotide sequences for all protein-coding transcripts on the reference chromosomes (biotypes `protein_coding`, `nonsense_mediated_decay`, `non_stop_decay`, `IG_*_gene`, `TR_*_gene`, `polymorphic_pseudogene`)
+`lnc` | **L** | The nucleotide sequences for all long non-coding transcripts on the reference chromosomes
 
 ## Reference Set Identifiers
 
