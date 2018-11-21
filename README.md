@@ -78,3 +78,32 @@ The default FTP URL is set from the values of the other tokens, and is by defaul
 ## Reference Set Data
 
 After download, the reference set directory will contain the appropriate `.fasta` and `.gtf` files for the reference type specified. The samtools `.fasta` file index is also included. The `logs` subdirectory contains the section logs, as well as a record of the GENCODE FTP locations used for the two reference files.
+
+## Building Specific Index Sets
+
+Template scripts for building aligner-specific indices are provided. For all of these to work, the following tokens must be supplied (as there are no specified defaults):
+
+Token | Description
+:-----|:-----------
+`REFSET_BASE` | The base directory for storing reference sets
+`INDEX_BASE` | The base directory for storing index sets
+`REF_ID` | The reference set ID to build an index for
+
+The following templates are provided:
+
+Aligner | Template File | Token File
+:-------|:--------------|:----------
+`salmon` | `salmon-reference.qsubsec` | `salmon-reference.tff`
+
+The template and token files are hosted at <https://alastair-droop.github.io/gencode-refset/>.
+
+For example, to build a Salmon reference for the reference set ID `GRCh38p12_29T` using the reference set base directory `$REFSET_DIR` and the index base directory `$REFINDEX_BASE`:
+
+~~~bash
+qsubsec \
+    https://alastair-droop.github.io/gencode-refset/salmon-reference.qsubsec \
+    https://alastair-droop.github.io/gencode-refset/salmon-reference.tff \
+    REFSET_BASE=$REFSET_DIR \
+    INDEX_BASE=$REFINDEX_DIR \
+    REF_ID=GRCh38p12_29T
+~~~

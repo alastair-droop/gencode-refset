@@ -1,0 +1,22 @@
+# The maximum wall time for the run is mandatory on many SGE systems.
+# This is specified as hh:mm:ss
+MAX_TIME="00:30:00"
+
+# We also need to specify the maximum memory for the run:
+MAX_MEM = "8G"
+
+# Specify the maximum number of threads available:
+MAX_THREADS = 1
+
+# Specify the reference set FASTA file:
+REFSET_FASTA = "{REFSET_BASE}/{REF_ID}/{REF_ID}.fasta"
+
+# Define the specific index directory (which is also the index ID):
+INDEX_DIR = "{INDEX_BASE}/salmon-{REF_ID}"
+LOG_DIR = "{INDEX_DIR}/logs"
+
+# Define the salmon executable:
+SALMON_EXEC = "salmon"
+
+# Specify the maximum k-mer length:
+KMER_LEN = 31
