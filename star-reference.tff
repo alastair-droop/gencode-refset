@@ -1,0 +1,29 @@
+# The maximum wall time for the run is mandatory on many SGE systems.
+# This is specified as hh:mm:ss
+MAX_TIME="04:00:00"
+
+# We also need to specify the maximum memory for the run:
+MAX_MEM = "64G"
+
+# Specify the maximum number of threads available:
+MAX_THREADS = 8
+
+# Specify the reference set FASTA & GTF files:
+REFSET_FASTA = "{REFSET_BASE}/{REF_ID}/{REF_ID}.fasta"
+REFSET_GTF = "{REFSET_BASE}/{REF_ID}/{REF_ID}.gtf"
+
+# Define the specific index directory (which is also the index ID):
+INDEX_DIR = "{INDEX_BASE}/star-{REF_ID}"
+
+# Define the reference log directory:
+LOG_DIR = "{INDEX_DIR}/logs"
+
+# Define the temporary directory to use when building the genome index:
+TEMP_DIR="$TMPDIR"
+
+# Define the STAR executable:
+STAR_EXEC = "STAR"
+
+# Specify the maximum splice junction overhang
+# NB: This should be the maximum read length - 1:
+SJ_OVERHANG = 150

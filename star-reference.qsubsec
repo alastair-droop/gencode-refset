@@ -1,0 +1,34 @@
+# This template generates a salmon index from a given reference set.
+# Alastair Droop, 2018-11-21
+
+# Get the necessary Python functions:
+from os import makedirs
+from os.path import expanduser, expandvars
+
+section('STAR-INDEX-{REF_ID}', description='Genrate a Salmon index for {REF_ID}')
+limits(h_rt='{MAX_TIME}', h_vmem='{MAX_MEM}')
+options('V', 'cwd', 'notify')
+options('pe smp {MAX_THREADS}')
+
+# Attempt to set up the reference folder:
+try:
+    makedirs(expandvars(expanduser('{LOG_DIR}')))
+    message('created reference log directory "{LOG_DIR}"')
+except FileExistsError: message('reference log directory "{LOG_DIR}" already exists')
+except: raise Exception('Failed to create reference log directory {LOG_DIR}')
+outputs('{LOG_DIR}')
+
+# Check that the directories are all OK:
+for p in ['{INDEX_DIR}', '{LOG_DIR}', '{TEMP_DIR}']:
+    require(p, 'PATH_READABLE')
+    require(p, 'PATH_WRITABLE')
+
+# Check that all of the executables are OK:
+require('{STAR_EXEC}', 'PATH_EXECUTABLE')
+
+# Submit the salmon index command:
+command('{STAR_EXEC} --runMode genomeGenerate --runThreadN {MAX_THREADS} --outTmpDir {TEMP_DIR}/STAR --genomeDir {INDEX_DIR} --genomeFastaFiles {REFSET_FASTA} --sjdbGTFfile {REFSET_GTF} --sjdbOverhang {SJ_OVERHANG} &> {LOG_DIR}/star-reference.log', name='generate-index', log=True, test=True)
+
+# Add a link to the original reference FASTA & GTF files:
+command('ln -s {REFSET_FASTA} {INDEX_DIR}/{REF_ID}.fasta', name='ln_fasta')
+command('ln -s {REFSET_GTF} {INDEX_DIR}/{REF_ID}.gtf', name='ln_gtf')

@@ -91,11 +91,12 @@ Token | Description
 
 The following templates are provided:
 
-Aligner | Template File | Token File
-:-------|:--------------|:----------
+Aligner  | Template File              | Token File
+:--------|:---------------------------|:---------------------
 `salmon` | `salmon-reference.qsubsec` | `salmon-reference.tff`
+`STAR`   | `star-reference.qsubsec`   | `star-reference.tff`
 
-The template and token files are hosted at <https://alastair-droop.github.io/gencode-refset/>.
+The template and token files are hosted at <https://alastair-droop.github.io/gencode-refset/>. Aligner-specific tokens are usually required. Basic documentation for these tokens are given in the relevant `.tff` files.
 
 For example, to build a Salmon reference for the reference set ID `GRCh38p12_29T` using the reference set base directory `$REFSET_DIR` and the index base directory `$REFINDEX_BASE`:
 
