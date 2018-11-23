@@ -23,6 +23,10 @@ for p in ['{INDEX_DIR}', '{LOG_DIR}']:
     require(p, 'PATH_READABLE')
     require(p, 'PATH_WRITABLE')
 
+# Check that the input files are OK:
+for f in ['{REFSET_FASTA}', '{REFSET_GTF}']:
+    require(f, 'PATH_READABLE')
+
 # Check that all of the executables are OK:
 require('{SALMON_EXEC}', 'PATH_EXECUTABLE')
 
@@ -30,4 +34,5 @@ require('{SALMON_EXEC}', 'PATH_EXECUTABLE')
 command('{SALMON_EXEC} index --transcripts {REFSET_FASTA} --kmerLen {KMER_LEN} --index {INDEX_DIR} --gencode --keepDuplicates --threads {MAX_THREADS} 2> {LOG_DIR}/salmon-index.log', name='salmon_index')
 
 # Add a link to the original reference FASTA file:
-command('ln -s {REFSET_FASTA} {INDEX_DIR}/{REF_ID}.fasta', name='ln_fasta')
+command('ln -s {REFSET_FASTA} {INDEX_DIR}/{INDEX_PREFIX}-{REF_ID}.fasta', name='ln_fasta')
+command('ln -s {REFSET_GTF} {INDEX_DIR}/{INDEX_PREFIX}-{REF_ID}.gtf', name='ln_gtf')
