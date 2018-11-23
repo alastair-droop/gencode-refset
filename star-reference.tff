@@ -2,10 +2,14 @@
 # This is specified as hh:mm:ss
 MAX_TIME="04:00:00"
 
-# We also need to specify the maximum memory for the run:
+# If this is "yes", we'll request a whole node (and thus ignore the memory requirement):
+USE_WHOLE_NODE = "yes" # Should be "yes" or "no"
+
+# We need to specify the maximum memory for the run (if not using a whole node):
 MAX_MEM = "64G"
 
 # Specify the maximum number of threads available:
+# Set this to the number of cores on the node if USE_WHOLE_NODE is "yes"
 MAX_THREADS = 8
 
 # Specify the reference set FASTA & GTF files:
@@ -13,7 +17,8 @@ REFSET_FASTA = "{REFSET_BASE}/{REF_ID}/{REF_ID}.fasta"
 REFSET_GTF = "{REFSET_BASE}/{REF_ID}/{REF_ID}.gtf"
 
 # Define the specific index directory (which is also the index ID):
-INDEX_DIR = "{INDEX_BASE}/star-{REF_ID}"
+INDEX_PREFIX = "star"
+INDEX_DIR = "{INDEX_BASE}/{INDEX_PREFIX}-{REF_ID}"
 
 # Define the reference log directory:
 LOG_DIR = "{INDEX_DIR}/logs"
