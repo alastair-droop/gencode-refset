@@ -5,7 +5,7 @@
 from os import makedirs
 from os.path import expanduser, expandvars
 
-section('SALMON-INDEX-{REF_ID}', description='Genrate a Salmon index for {REF_ID}')
+section('SALMON-INDEX-{REF_ID}', description='Generate a Salmon index ({INDEX_PREFIX}-{REF_ID}) from genome reference set {REF_ID}')
 limits(h_rt='{MAX_TIME}', h_vmem='{MAX_MEM}')
 options('V', 'cwd', 'notify')
 options('pe smp {MAX_THREADS}')
