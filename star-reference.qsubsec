@@ -30,7 +30,7 @@ for p in ['{INDEX_DIR}', '{LOG_DIR}', '{TEMP_DIR}']:
 require('{STAR_EXEC}', 'PATH_EXECUTABLE')
 
 # Submit the salmon index command:
-command('{STAR_EXEC} --runMode genomeGenerate --runThreadN {MAX_THREADS} --outTmpDir {TEMP_DIR}/STAR --genomeDir {INDEX_DIR} --genomeFastaFiles {REFSET_FASTA} --sjdbGTFfile {REFSET_GTF} --sjdbOverhang {SJ_OVERHANG} &> {LOG_DIR}/star-reference.log', name='generate-index', log=True, test=True)
+command('{STAR_EXEC} --runMode genomeGenerate --runThreadN {MAX_THREADS} --limitGenomeGenerateRAM {MAX_STAR_MEM} --outTmpDir {TEMP_DIR}/STAR --genomeDir {INDEX_DIR} --genomeFastaFiles {REFSET_FASTA} --sjdbGTFfile {REFSET_GTF} --sjdbOverhang {SJ_OVERHANG} &> {LOG_DIR}/star-reference.log', name='generate-index', log=True, test=True)
 
 # Add a link to the original reference FASTA & GTF files:
 command('ln -s {REFSET_FASTA} {INDEX_DIR}/{INDEX_PREFIX}-{REF_ID}.fasta', name='ln_fasta')

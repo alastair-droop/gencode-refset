@@ -3,10 +3,15 @@
 MAX_TIME="04:00:00"
 
 # If this is "yes", we'll request a whole node (and thus ignore the memory requirement):
-USE_WHOLE_NODE = "yes" # Should be "yes" or "no"
+USE_WHOLE_NODE = "no" # Should be "yes" or "no"
 
 # We need to specify the maximum memory for the run (if not using a whole node):
-MAX_MEM = "64G"
+MAX_JOB_MEM = "8G"
+
+# This is the maximum amount of memory that STAR can use when generating a genome.
+# NB: This is in Bytes, and must be less than MAX_JOB_MEM if not using a whole node,
+# or less than the maximum node memory if using a whole node.
+MAX_STAR_MEM = 64000000000
 
 # Specify the maximum number of threads available:
 # Set this to the number of cores on the node if USE_WHOLE_NODE is "yes"
